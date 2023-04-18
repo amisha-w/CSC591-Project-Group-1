@@ -81,7 +81,8 @@ class DATA:
         some = many(rows, options['Halves'])
         A = above if above and options['Reuse'] else any(some)
         tmp = sorted(list(map(function, some)), key=itemgetter('dist'))
-        far = tmp[int(options['Far'] * len(rows)) // 1]
+
+        far = tmp[int(options['Far'] * (len(tmp)-1)) // 1]
         B = far['row']
         c = far['dist']
         left, right = [], []
@@ -198,7 +199,7 @@ class DATA:
             for range in ranges:
                 print(range['txt'], range['lo'], range['hi'])
                 tmp.append({'range': range, 'max': len(ranges), 'val': v(range['y'].has)})
-        rule, most = firstN(sorted(tmp, key=itemgetter('val')), score)
+        rule, most = firstN(sorted(tmp, key=itemgetter('val'),reverse=True), score)
         return rule, most
 
     def selects(self, rule, rows):
