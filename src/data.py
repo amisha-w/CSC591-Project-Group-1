@@ -48,8 +48,8 @@ class DATA:
         n, d = 0, 0
         for col in cols or self.cols.x:
             n = n + 1
-            d = d + col.dist(row1.cells[col.at], row2.cells[col.at]) ** the['p']
-        return (d / n) ** (1 / the['p'])
+            d = d + col.dist(row1.cells[col.at], row2.cells[col.at]) ** options['p']
+        return (d / n) ** (1 / options['p'])
 
     def around(self, row1, rows=None, cols=None):
 

@@ -1,68 +1,70 @@
 import math, sys
 sys.path.append("../src")
 from constants import *
-
+from utils import *
 
 class Num:
-    def __init__(self, at=0, txt=""):
+    def __init__(self, at=0, txt="", t=None):
         self.at = at
         self.txt = txt
         self.n = 0
         self.mu = 0
         self.m2 = 0
+        self.sd = 0
         self.lo = float('inf')
         self.hi = float('-inf')
-        self.w = -1 if "-" in self.txt else 1
+        self.w = -1 if self.txt.endswith("-") else 1
         self.has = {}
 
+        if t:
+            for n in t:
+                self.add(n)
+
     def add(self, n):
-        '''
-        Addition method for n
-        '''
-        if n != "?":
-            self.n = self.n + 1
+        if n != '?':
+            self.n += 1
+            self.lo, self.hi = min(n, self.lo), max(n, self.hi)
+
+            all = len(self.has)
+
+            pos = all + 1 if all < options["Max"] else rint(1, all) if rand() < options["Max"] / self.n else 0
+
+            if pos:
+                self.has[pos] = n
+                self.ok = False
+
             d = n - self.mu
-            self.mu = self.mu + (d / self.n)
-            self.m2 = self.m2 + (d * (n - self.mu))
-            self.lo = min(n, self.lo)
-            self.hi = max(n, self.hi)
+            self.mu = self.mu + d / self.n
+            self.m2 = self.m2 + d * (n - self.mu)
+            self.sd = 0 if self.n < 2 else (self.m2 / (self.n - 1)) ** .5
 
     def mid(self):
-        '''
-        Method for calculating mean
-        '''
-        return self.mu
+        return per(self.vals(), .5)
 
     def div(self):
-        '''
-        Method for calculating Standard Deviation
-        '''
-        return (self.m2 < 0 or self.n < 2) and 0 or (self.m2 / (self.n - 1)) ** 0.5
+        return (per(self.vals(), .9) - per(self.vals(), .1)) / 2.58
 
-    def rnd(self,x,n) -> float:
-        '''
-        Helper method
-        '''
+    def vals(self):
+        return list(dict(sorted(self.has.items(), key=lambda x: x[1])).values())
+
+    def rnd(self, x, n):
         if x == '?':
             return x
         else:
-            mult = math.pow(10, n)
-            return math.floor(x * mult + 0.5)/mult
+            return rnd(x, n)
 
     def norm(self, n):
-        return n if n == "?" else (n - self.lo) / (self.hi - self.lo + 1e-32)
+        return n if n == '?' else (n - self.lo) / (self.hi - self.lo + 1e-32)
 
-    def dist(self, n1, n2):
-        '''
-        Method to calculate distance
-        '''
-
-        if n1=="?" and n2=="?":
+    def dist(col, x, y):
+        if x == "?" and y == "?":
             return 1
-
-        n1,n2=self.norm(n1), self.norm(n2)
-
-        if(n1=="?"): n1 = 1 if n2<0.5 else 0
-        if(n2=="?"): n2 = 1 if n1<0.5 else 0
-        return abs(n1 - n2)
+        if type(col) is Sym:
+            return 0 if x == y else 1
+        x, y = col.norm(x), col.norm(y)
+        if x == "?":
+            x = 1 if y < 0.5 else 1
+        if y == "?":
+            y = 1 if x < 0.5 else 1
+        return abs(x - y)
 
