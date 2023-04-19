@@ -7,6 +7,7 @@ from num import Num
 from operator import itemgetter
 import random
 
+Seed = 937162211
 def diffs(nums1,nums2):
   def fun(k,nums):
         return cliffsDelta(nums.has,nums2[k].has),nums.txt
@@ -328,12 +329,12 @@ def prune(rule, maxSize):
             rule[txt] = None
     if n > 0:
         return rule
-    
+
 def stats_average(data_array):
     res = {}
     for x in data_array:
         for k,v in x.stats().items():
             res[k] = res.get(k,0) + v
     for k,v in res.items():
-        res[k] /= options['n_iter']
+        res[k] /= 20
     return res

@@ -10,7 +10,7 @@ OPTIONS:
   -b  --bins    initial number of bins       = 16
   -c  --cliffs  cliff's delta threshold      = .147
   -d  --d       different is over sd*d       = .35
-  -f  --file    data file                    = ../etc/data/pom.csv
+  -f  --file    data file                    = ../etc/data/auto2.csv
   -F  --Far     distance to distant          = .95
   -g  --go      start-up action              = nothing
   -h  --help    show help                    = false

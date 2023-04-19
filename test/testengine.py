@@ -64,9 +64,9 @@ def test_csv():
 
 def test_data():
     data = DATA(options['file'])
-    col=data.cols.x[1]
-    print(col.lo,col.hi, col.mid(),col.div())
-    print(data.stats('mid', data.cols.y, 2))
+    col = data.cols.x[2]
+    print(col.lo, col.hi, col.mid(), col.div())
+    print(data.stats(data.cols.y, 2, 'mid'))
 
 def test_clone():
     data1 = DATA(options['file'])
@@ -168,4 +168,6 @@ if __name__ == '__main__':
     eg('sway', 'optimizing', test_sway)
     eg('bins', 'find deltas between best and rest', test_bins)
     eg('expln', 'explore explanation sets', test_xpln)
+
+    main_tables()
     main(options, help, egs)
