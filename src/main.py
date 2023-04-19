@@ -43,7 +43,6 @@ def main_tables():
     files = [f for f in listdir(data_file_path) if isfile(join(data_file_path, f))]
 
     for file in files:
-        print("Sanket File", file)
         table_1, table_1_dict, table_2 = get_tables()
 
         stdoutOrigin = sys.stdout
