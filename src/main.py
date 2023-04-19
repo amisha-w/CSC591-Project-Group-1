@@ -4,16 +4,17 @@ from utils import *
 import re
 
 def cli(options):
-    '''
-    Parses help string into options
-    '''
     args = sys.argv[1:]
-    for key, value in options.items():
-
+    for k, v in options.items():
         for n, x in enumerate(args):
-            if x == '-'+ key[0] or x == '--'+ key:
-                  value = "false" if value == "true" else "true" if value == "false" else args[n+1]
-        options[key] = coerce(value)
+            if x == '-'+k[0] or x == '--'+k:
+                if v == 'false':
+                    v = 'true'
+                elif v == 'true':
+                    v = 'false'
+                else:
+                    v = args[n+1]
+        options[k] = coerce(v)
     return options
 
 def settings(s):
