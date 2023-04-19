@@ -2,8 +2,6 @@ import sys, re, math, copy, json, sys
 sys.path.append("../src")
 from constants import *
 from pathlib import Path
-from sym import Sym
-from num import Num
 from operator import itemgetter
 import random
 
