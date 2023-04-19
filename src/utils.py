@@ -3,12 +3,73 @@ sys.path.append("../src")
 from constants import *
 from pathlib import Path
 from sym import Sym
+from num import Num
 from operator import itemgetter
+import random
 
 def diffs(nums1,nums2):
   def fun(k,nums):
         return cliffsDelta(nums.has,nums2[k].has),nums.txt
   return kap(nums1, fun)
+
+def delta(i, other):
+    e, y, z = 1E-32, i, other
+    return abs(y.mu - z.mu) / ((e + y.sd ** 2 / y.n + z.sd ** 2 / z.n) ** .5)
+
+def bootstrap(y0, z0):
+    x, y, z, yhat, zhat = Num(), Num(), Num(), [], []
+    for y1 in y0:
+        x.add(y1)
+        y.add(y1)
+    for z1 in z0:
+        x.add(z1)
+        z.add(z1)
+    xmu, ymu, zmu = x.mu, y.mu, z.mu
+    for y1 in y0:
+        yhat.append(y1 - ymu + xmu)
+    for z1 in z0:
+        zhat.append(z1 - zmu + xmu)
+    tobs = delta(y, z)
+    n = 0
+    for _ in range(options['bootstrap']):
+
+        if delta(Num(t=samples(yhat)), Num(t=samples(zhat))) > tobs:
+            n += 1
+    return n / options['bootstrap'] >= options['conf']
+
+def RX(t,s):
+    t = sorted(t)
+    return {'name' : s or "", 'rank':0, 'n':len(t), 'show':"", 'has':t}
+
+def div(t):
+    t= t.get('has', t)
+    return (t[ len(t)*9//10 ] - t[ len(t)*1//10 ])/2.56
+
+def mid(t):
+    t= t.get('has', t)
+    n = len(t)//2
+    return (t[n] +t[n+1])/2 if len(t)%2==0 else t[n+1]
+
+def merge(rx1,rx2) :
+    rx3 = RX([], rx1['name'])
+    for _,t in enumerate([rx1['has'],rx2['has']]):
+        for _,x in enumerate(t): 
+            rx3['has'].append(x)
+    rx3['has'] = sorted(rx3['has'])
+    rx3['n'] = len(rx3['has'])
+    return rx3
+
+def samples(t,n=0):
+    u= []
+    n = n or len(t)
+    for i in range(n): 
+        u.append(t[random.randrange(len(t))]) 
+    return u
+
+def gaussian(mu,sd):
+    mu,sd = mu or 0, sd or 1
+    sq,pi,log,cos,r = math.sqrt,math.pi,math.log,math.cos,random.random
+    return  mu + sd * sq(-2*log(r())) * cos(2*pi*r())
 
 def cliffsDelta(ns1,ns2):
     if len(ns1) > 256:
@@ -117,15 +178,9 @@ def dict_kap(t, fun):
     return u
 
 def cosine(a,b,c):
-    den = 1 if c == 0 else 2*c
-    x1 = (a**2 + c**2 - b**2) / den
-    x2 = max(0, min(1, x1))
-    y  = abs((a**2 - x2**2))**.5
-    if isinstance(y, complex):
-        print('a', a)
-        print('x1', x1)
-        print('x2', x2)
-    return x2, y
+    if c==0:
+        return 0
+    return (a**2 + c**2 - b**2) / (2*c)
 
 def any(t):
     return t[rint(0, len(t) - 1)]
@@ -226,11 +281,11 @@ def firstN(sortedRanges,scoreFun):
             return range
     sortedRanges = [x for x in sortedRanges if useful(x)]
     most,out = -1, -1
-    for n in range(1,len(sortedRanges)+1):
-        temp = sortedRanges[0:n]
+    for n in range(1,len(sortedRanges)):
+        temp = sortedRanges[:n+1]
         t_range = [x['range'] for x in temp]
         tmp,rule = scoreFun(t_range)
-        if tmp and tmp > most:
+        if tmp!=None and tmp > most:
             out,most = rule,tmp
     return out,most
 
