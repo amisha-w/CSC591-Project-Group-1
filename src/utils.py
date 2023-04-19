@@ -17,6 +17,10 @@ def delta(i, other):
     e, y, z = 1E-32, i, other
     return abs(y.mu - z.mu) / ((e + y.sd ** 2 / y.n + z.sd ** 2 / z.n) ** .5)
 
+def per(t, p):
+    p = math.floor(((p or 0.5) * len(t)) + 0.5)
+    return t[max(0, min(len(t), p) - 1)]
+
 def bootstrap(y0, z0):
     x, y, z, yhat, zhat = Num(), Num(), Num(), [], []
     for y1 in y0:
