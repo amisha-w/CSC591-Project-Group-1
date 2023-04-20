@@ -3,13 +3,13 @@ import sys, re, math, copy, json
 from constants import *
 from pathlib import Path
 from sym import *
-from range import *
+from merge import *
 from num import *
 
 
 Seed = 937162211
 
-def rint(self, lo=0, hi=1):
+def rint(lo=0, hi=1):
     return math.floor(0.5 + rand(lo, hi))
 #
 # def set_seed(self, value: int):

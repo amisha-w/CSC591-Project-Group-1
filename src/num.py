@@ -3,6 +3,7 @@ from utils import *
 from constants import *
 from sym import *
 
+
 class Num:
     def __init__(self, at=0, txt="", t=None):
         self.at = at
@@ -71,3 +72,11 @@ class Num:
     def per(self, t, p):
         p = math.floor(((p or 0.5) * len(t)) + 0.5)
         return t[max(0, min(len(t), p) - 1)]
+
+def rand(lo=0, hi=1):
+    Seed = 937162211
+    Seed = (16807 * Seed) % 2147483647
+    return lo + (hi - lo) * Seed / 2147483647
+
+def rint(lo=0, hi=1):
+    return math.floor(0.5 + rand(lo, hi))

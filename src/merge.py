@@ -2,7 +2,7 @@ from sym import Sym
 from utils import *
 
 
-class RANGE:
+class Merge:
     def __init__(self, at, txt, lo, hi=None):
         self.at = at
         self.txt = txt
@@ -47,7 +47,7 @@ def bins(cols, rowss):
             if x != '?':
                 n = n + 1
                 k = bin(col, x)
-                ranges[k] = ranges.get(k, RANGE(col.at, col.txt, x))
+                ranges[k] = ranges.get(k, Merge(col.at, col.txt, x))
                 extend(ranges[k], x, y)
 
         n, ranges = 0, {}

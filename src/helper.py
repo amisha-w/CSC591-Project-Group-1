@@ -1,4 +1,4 @@
-from range import value, bins
+from merge import value, bins
 from utils import kap
 
 
