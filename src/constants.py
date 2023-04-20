@@ -30,14 +30,14 @@ egs = {}
 
 n = 0
 
-top_table = {'all': {'data' : [], 'evals' : 0},
+table_one = {'all': {'data' : [], 'evals' : 0},
              'sway1': {'data' : [], 'evals' : 0},
              'sway2': {'data' : [], 'evals' : 0},
              'xpln1': {'data' : [], 'evals' : 0},
              'xpln2': {'data' : [], 'evals' : 0},
              'top': {'data' : [], 'evals' : 0}}
 
-bottom_table = [[['all', 'all'],None],
+table_two = [[['all', 'all'],None],
                 [['all', 'sway1'],None],
                 [['sway1', 'sway2'],None],
                 [['sway1', 'xpln1'],None],
