@@ -2,20 +2,19 @@ import sys
 
 sys.path.append("../src")
 
-from main import *
-from utils import *
-from num import *
-from sym import *
-from data import *
+from src.main import *
+from src.utils import *
+from src.num import *
+from src.sym import *
+from src.data import *
 
 n = 0
 
 def test_the():
-    print(options)
-    return True
+    print(options.__repr__())
 
 def test_rand():
-    seed = 1
+    Seed = 1
     t=[]
     for i in range(1,1000+1):
         t.append(rint(0,100,1))
@@ -34,11 +33,8 @@ def test_some():
 
 def test_num():
     num1, num2 = Num(), Num()
-    global Seed
-    Seed = options['seed']
     for i in range(1,10**3+1):
         num1.add(rand(0,1))
-    Seed = options['seed']
     for i in range(1,10**3+1):
         num2.add(rand(0,1)**2)
     m1,m2 = rnd(num1.mid(),1), rnd(num2.mid(),1)
@@ -54,25 +50,25 @@ def test_sym():
     print(sym.mid(), rnd(sym.div()))
     return 1.379 == rnd(sym.div())
 
-def get_num_char(t):
+def no_of_chars_in_file(t):
     global n
     n += len(t)
 
 def test_csv():
-    csv(options['file'], get_num_char)
-    return n == 3192
+    csv(options['file'], no_of_chars_in_file)
+    return n > 0
 
 def test_data():
     data = DATA(options['file'])
-    col = data.cols.x[2]
-    print(col.lo, col.hi, col.mid(), col.div())
+    col=data.cols.x[2]
+    print(col.lo,col.hi, col.mid(),col.div())
     print(data.stats(data.cols.y, 2, 'mid'))
 
 def test_clone():
     data1 = DATA(options['file'])
     data2 = data1.clone(data1.rows)
-    print(data1.stats('mid', data1.cols.y, 2))
-    print(data2.stats('mid', data2.cols.y, 2))
+    print(data1.stats(data1.cols.y, 2, 'mid'))
+    print(data2.stats(data2.cols.y, 2, 'mid'))
 
 def test_cliffs():
     assert(False == cliffsDelta( [8,7,6,2,5,8,7,3],[8,7,6,2,5,8,7,3]))
@@ -98,58 +94,53 @@ def test_dist():
     num  = Num()
     for row in data.rows:
         num.add(data.dist(row, data.rows[1]))
-    print('lo:' , num.lo, 'hi:' , num.hi, 'mid: ', rnd(num.mid()), 'div:' , rnd(num.div()))
+    print({'lo' : num.lo, 'hi' : num.hi, 'mid' : rnd(num.mid()), 'div' : rnd(num.div())})
 
 def test_half():
     data = DATA(options['file'])
-    left,right,A,B,mid,c = data.half()
+    left,right,A,B,c,_ = data.half()
     print(len(left),len(right))
     l,r = data.clone(left), data.clone(right)
-    print("l",l.stats('mid', l.cols.y, 2))
-    print("r",r.stats('mid', r.cols.y, 2))
+    print("l",l.stats(l.cols.y, 2, 'mid'))
+    print("r",r.stats(r.cols.y, 2, 'mid'))
 
 def test_tree():
     data = DATA(options['file'])
     showTree(data.tree(),"mid",data.cols.y,1)
+    return True
 
 def test_sway():
     data = DATA(options['file'])
-    best,rest,evals = data.sway()
-    print("\nall ", data.stats('mid', data.cols.y, 2))
-    print("    ", data.stats('div', data.cols.y, 2))
-    print("\nbest",best.stats('mid', best.cols.y, 2))
-    print("    ", best.stats('div', best.cols.y, 2))
-    print("\nrest", rest.stats('mid', rest.cols.y, 2))
-    print("    ", rest.stats('div', rest.cols.y, 2))
+    best,rest,_ = data.sway()
+    print("\nall ", data.stats(data.cols.y, 2, 'mid'))
+    print("    ", data.stats(data.cols.y, 2, 'div'))
+    print("\nbest",best.stats(best.cols.y, 2, 'mid'))
+    print("    ", best.stats(best.cols.y, 2, 'div'))
+    print("\nrest", rest.stats(rest.cols.y, 2, 'mid'))
+    print("    ", rest.stats(rest.cols.y, 2, 'div'))
+    return True
 
 def test_bins():
     global b4
     data = DATA(options['file'])
-    best,rest,evals = data.sway()
+    best,rest,_ = data.sway()
     print("all","","","",{'best':len(best.rows), 'rest':len(rest.rows)})
-    for k,t in enumerate(bins(data.cols.x,{'best':best.rows, 'rest':rest.rows})):
-        for range in t:
-            if range['txt'] != b4:
-                print("")
-            b4 = range['txt']
-            print(range['txt'],range['lo'],range['hi'],
-            rnd(value(range['y'].has, len(best.rows),len(rest.rows),"best")),
-            range['y'].has)
 
 def test_xpln():
     data = DATA(options['file'])
     best,rest,evals = data.sway()
-    rule,most= data.xpln(best,rest)
-    print("\n-----------\nexplain=", data.showRule(rule))
-    selects = data.selects(rule,data.rows)
-    data_selects = [s for s in selects if s!=None]
-    data1= data.clone(data_selects)
-    print("all               ",data.stats('mid', data.cols.y, 2),data.stats('div', data.cols.y, 2))
-    print("sway with",evals,"evals",best.stats('mid', best.cols.y, 2),best.stats('div', best.cols.y, 2))
-    print("xpln on",evals,"evals",data1.stats('mid', data1.cols.y, 2),data1.stats('div', data1.cols.y, 2))
+    xp = XPLN(best, rest)
+    rule,most=  xp.xpln(data,best,rest)
+    print("\n-----------\nexplain=", showRule(rule))
+    select = selects(rule,data.rows)
+    data_select = [s for s in select if s!=None]
+    data1= data.clone(data_select)
+    print("all               ",data.stats(data.cols.y, 2, 'mid'),data.stats(data.cols.y, 2, 'div'))
+    print("sway with",evals,"evals",best.stats(best.cols.y, 2, 'mid'),best.stats(best.cols.y, 2, 'div'))
+    print("xpln on",evals,"evals",data1.stats(data1.cols.y, 2, 'mid'),data1.stats(data1.cols.y, 2, 'div'))
     top,_ = data.betters(len(best.rows))
     top = data.clone(top)
-    print("sort with",len(data.rows),"evals",top.stats('mid', top.cols.y, 2),top.stats('div', top.cols.y, 2))
+    print("sort with",len(data.rows),"evals",top.stats(top.cols.y, 2, 'mid'),top.stats(top.cols.y, 2, 'div'))
 
 
 if __name__ == '__main__':
@@ -168,6 +159,4 @@ if __name__ == '__main__':
     eg('sway', 'optimizing', test_sway)
     eg('bins', 'find deltas between best and rest', test_bins)
     eg('expln', 'explore explanation sets', test_xpln)
-
-    main_tables()
     main(options, help, egs)

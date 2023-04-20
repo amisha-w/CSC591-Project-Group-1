@@ -1,12 +1,8 @@
-import math , sys
-sys.path.append("../src")
-from sym import Sym
-from num import Num
+import re
+from sym import *
+from num import *
 
 class Col:
-    '''
-    Create Num or Sym for non-skipped columns Columns
-    '''
     def __init__(self, t):
         self.names = t
         self.all = []
@@ -14,25 +10,21 @@ class Col:
         self.y = []
         self.klass = None
 
-        for column in t:
-            if column[0].isupper():
-                col = Num(t.index(column), column)
+        for col_name in t:
+            n = t.index(col_name)
+            col_name = col_name.strip()
+            if col_name[0].isupper():
+                col = Num(n, col_name)
             else:
-                col = Sym(t.index(column), column)
+                col = Sym(n, col_name)
             self.all.append(col)
 
-            if not column[-1] == "X":
-                if "-" in column or "+" in column or "!" in column:
-                    self.y.append(col)
-                else:
-                    self.x.append(col)
-                if "!" in column:
+            if not col_name[-1] == "X":
+                if "!" in col_name:
                     self.klass=col
+                self.y.append(col) if re.findall("[!+-]$", col_name) else self.x.append(col)
 
     def add(self, row):
-        '''
-        Add row to columns
-        '''
-        for list in [self.x, self.y]:
-            for col in list:
+        for t in [self.x, self.y]:
+            for col in t:
                 col.add(row.cells[col.at])

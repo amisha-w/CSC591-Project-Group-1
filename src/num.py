@@ -1,7 +1,7 @@
-import math, sys
-sys.path.append("../src")
-from constants import *
+import math
 from utils import *
+from constants import *
+from sym import *
 
 class Num:
     def __init__(self, at=0, txt="", t=None):
@@ -39,10 +39,10 @@ class Num:
             self.sd = 0 if self.n < 2 else (self.m2 / (self.n - 1)) ** .5
 
     def mid(self):
-        return per(self.vals(), .5)
+        return self.per(self.vals(), .5)
 
     def div(self):
-        return (per(self.vals(), .9) - per(self.vals(), .1)) / 2.58
+        return (self.per(self.vals(), 0.9) - self.per(self.vals(), 0.1)) / 2.58
 
     def vals(self):
         return list(dict(sorted(self.has.items(), key=lambda x: x[1])).values())
@@ -68,3 +68,6 @@ class Num:
             y = 1 if x < 0.5 else 1
         return abs(x - y)
 
+    def per(self, t, p):
+        p = math.floor(((p or 0.5) * len(t)) + 0.5)
+        return t[max(0, min(len(t), p) - 1)]
