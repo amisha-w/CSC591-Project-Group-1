@@ -1,0 +1,19 @@
+MWU and KW significance level:  0.05
+                       Cost-                    Completion+             Idle-                  
+---------------------  -----------------------  ----------------------  --------------------  
+all                    328.54                   0.9                     0.24                              
+sway1                  232.736                  0.902                   0.225                              
+sway2                  340                      0.92                    0.34                              
+xpln1                  253.42                   0.89                    0.24                              
+xpln2                  346.11                   0.9                     0.23                              
+top                    138.51                   1.0                     0.0                           
+
+                Cost-    Completion+    Idle-
+--------------  -------  -------------  -------
+all to all      =        =              =
+all to sway1    ≠        ≠              ≠
+all to sway2    ≠        ≠              ≠
+sway1 to sway2  ≠        ≠              ≠
+sway1 to xpln1  ≠        ≠              ≠
+sway2 to xpln2  ≠        ≠              ≠
+sway1 to top    ≠        ≠              ≠

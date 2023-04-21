@@ -1,0 +1,18 @@
+                       N_effort-                
+---------------------  ----------------------  
+all                    2098.0                              
+sway1                  427.4                             
+sway2                  144.4                              
+xpln1                  885.65                              
+xpln2                  221.25                             
+top                    149.0                             
+
+                N_effort-
+--------------  -----------
+all to all      =
+all to sway1    ≠
+all to sway2    ≠
+sway1 to sway2  ≠
+sway1 to xpln1  ≠
+sway2 to xpln2  ≠
+sway1 to top    ≠

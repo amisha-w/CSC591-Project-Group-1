@@ -11,6 +11,7 @@ top                    1985.0                  18.78                  40.0
 --------------  ------  ------  ------
 all to all      =       =       =
 all to sway1    ≠       ≠       ≠
+all to sway2    ≠       ≠       ≠
 sway1 to sway2  ≠       ≠       ≠
 sway1 to xpln1  ≠       ≠       ≠
 sway2 to xpln2  ≠       ≠       ≠

@@ -4,7 +4,7 @@
   ## Optimization of multi-objective Clustering SWAY using KMeans, Boolean Domination and Decision Tree for Explanation
   
   
- </div>
+
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7851197.svg)](10.5281/zenodo.7851197)
 ![license](https://img.shields.io/github/license/amisha-w/CSC591-Project-Group-1)
@@ -14,6 +14,10 @@
 ![PR](https://img.shields.io/github/issues-pr/amisha-w/CSC591-Project-Group-1?color=red)
 ![PR Closed](https://img.shields.io/github/issues-pr-closed-raw/amisha-w/CSC591-Project-Group-1?color=red)
 ![Commit Activity](https://img.shields.io/github/commit-activity/w/amisha-w/CSC591-Project-Group-1?color=blue)
+![Pylint](https://img.shields.io/github/actions/workflow/status/amisha-w/CSC591-Project-Group-1/pylint.yml?label=PyLint)
+![Python Style Checker](https://img.shields.io/github/actions/workflow/status/amisha-w/CSC591-Project-Group-1/stylechecker.yml?label=Python%20Style%20Checker)
+ 
+  </div>
 
 ##  Steps to run
 - Install Python 3.10 or higher
@@ -38,7 +42,7 @@ The rules listed below are to be followed by the ones who will be contributing t
 - It is recommended to create branches and start the changes in that branch and also delete the branch after commiting the code to avoid stale branches.
 
 ## Wish to contribute?
-- Please refer the file [CONTRIBUTING.md](https://github.com/amisha-w//AutoSE-HW1-Lua/blob/main/CONTRIBUTING.md) in the repository that guides new contributors on how they can help improve [LuaToPython](https://github.com/amisha-w//AutoSE-HW1-Lua)
+- Please refer the file [CONTRIBUTING.md](https://github.com/amisha-w//AutoSE-HW1-Lua/blob/main/CONTRIBUTING.md) in the repository that guides new contributors on how they can help improve the [Project](https://github.com/amisha-w/CSC591-Project-Group-1)
 - This file is for:
   - _Project Owners_ - Initiaters and maintainers of the file.
   - _Project contributors_ - People who think existing features can be simplified or new features can be added to improve the project.

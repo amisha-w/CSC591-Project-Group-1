@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+
+authors:
+  - family-names: Waghela
+    given-names: Amisha
+  - family-names: Tangade
+    given-names: Sanket
+  - family-names: Satra
+    given-names: Tilak
+title: "Lua to Python - Explain"
+version: "1.0.0"
+date-released: "04/20/2023"
+doi: 10.5281/zenodo.7851197
