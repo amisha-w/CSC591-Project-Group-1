@@ -2,6 +2,7 @@
 from utils import *
 from helper import *
 from data import DATA
+from decision import *
 from utils import *
 from tabulate import tabulate
 
@@ -46,15 +47,20 @@ def generate_tables():
             data = DATA(options['file'])
             best, rest, evals = data.sway()
             xp = Helper(best, rest)
+
+            best2, rest2, evals2 = data.sway('kmeans')
+            xp2 = Decision(best2, rest2)
+            best_xpln2, rest_xpln2 = xp2.decision_tree(data)
             rule, _ = xp.xpln(data, best, rest)
+
             if rule != -1:
                 betters, _ = data.betters(len(best.rows))
                 table_one['top']['data'].append(DATA(data, betters))
                 table_one['xpln1']['data'].append(DATA(data, selects(rule, data.rows)))
-                table_one['xpln2']['data'].append(DATA(data, selects(rule, data.rows)))
+                table_one['xpln2']['data'].append(DATA(data, selects(rule, best_xpln2)))
                 table_one['all']['data'].append(data)
                 table_one['sway1']['data'].append(best)
-                table_one['sway2']['data'].append(best)
+                table_one['sway2']['data'].append(best2)
 
                 for i in range(len(table_two)):
                     [base, diff], result = table_two[i]

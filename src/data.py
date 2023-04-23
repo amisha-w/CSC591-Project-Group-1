@@ -1,3 +1,5 @@
+import numpy as np
+from sklearn.cluster import KMeans
 from row import *
 from cols import *
 from utils import *
@@ -104,6 +106,55 @@ class DATA:
         best, rest, evals = worker(data.rows, [], 0)
         return DATA.clone(self, best), DATA.clone(self, rest), evals
 
+    def sway2(self):
+
+        data = self
+        def worker(rows, worse, evals0=None, above=None):
+            if len(rows) <= len(data.rows) ** options['min']:
+                return rows, many(worse, options['rest'] * len(rows)), evals0
+            else:
+                l, r, A, B, evals = self.kmeans(rows)
+                if self.decision_boolean_dom(B, A):
+                    l, r, A, B = r, l, B, A
+                for row in r:
+                    worse.append(row)
+                return worker(l, worse, evals + evals0, A)
+
+        best, rest, evals = worker(data.rows, [], 0)
+        return DATA.clone(self, best), DATA.clone(self, rest), evals
+
+    def kmeans(self, rows=None):
+        left = []
+        right = []
+        A = None
+        B = None
+
+        def min_dist(center, row, A):
+            if not A:
+                A = row
+            if self.dist(A, center) > self.dist(A, row):
+                return row
+            else:
+                return A
+
+        if not rows:
+            rows = self.rows
+        row_set = np.array([r.cells for r in rows])
+        kmeans = KMeans(n_clusters=2, random_state=Seed, n_init=10)
+        kmeans.fit(row_set)
+        left_cluster = Row(kmeans.cluster_centers_[0])
+        right_cluster = Row(kmeans.cluster_centers_[1])
+
+        for key, value in enumerate(kmeans.labels_):
+            if value == 0:
+                A = min_dist(left_cluster, rows[key], A)
+                left.append(rows[key])
+            else:
+                B = min_dist(right_cluster, rows[key], B)
+                right.append(rows[key])
+
+        return left, right, A, B, 1
+
     def betters(self, n):
         key = cmp_to_key(lambda row1, row2: -1 if self.better(row1, row2) else 1)
         tmp = sorted(self.rows, key=key)
@@ -111,3 +162,29 @@ class DATA:
             return tmp
         else:
             return tmp[1:n], tmp[n + 1:]
+
+    def boolean_dom(self, rows1, rows2, ys=None):
+        if isinstance(rows1, Row):
+            rows1 = [rows1]
+            rows2 = [rows2]
+        if not ys:
+            ys = self.cols.y
+
+        dominates = False
+        for col in ys:
+            for row1, row2 in zip(rows1, rows2):
+                x = col.norm(row1.cells[col.at]) * col.w * -1
+                y = col.norm(row2.cells[col.at]) * col.w * -1
+                if x > y:
+                    return False
+                elif x < y:
+                    dominates = True
+        return dominates
+
+    def decision_boolean_dom(self, row1, row2, ys=None):
+        row1_boolean_dom = self.boolean_dom(row1, row2, ys=ys)
+        row2_boolean_dom = self.boolean_dom(row2, row1, ys=ys)
+        if row1_boolean_dom and not row2_boolean_dom:
+            return True
+        else:
+            return False
