@@ -48,7 +48,7 @@ def generate_tables():
             best, rest, evals = data.sway()
             xp = Helper(best, rest)
 
-            best2, rest2, evals2 = data.sway('kmeans')
+            best2, rest2, evals2 = data.sway2()
             xp2 = Decision(best2, rest2)
             best_xpln2, rest_xpln2 = xp2.decision_tree(data)
             rule, _ = xp.xpln(data, best, rest)

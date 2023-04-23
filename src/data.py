@@ -114,7 +114,7 @@ class DATA:
                 return rows, many(worse, options['rest'] * len(rows)), evals0
             else:
                 l, r, A, B, evals = self.kmeans(rows)
-                if self.decision_boolean_dom(B, A):
+                if self.perform_boolean_domination(B, A):
                     l, r, A, B = r, l, B, A
                 for row in r:
                     worse.append(row)
@@ -124,6 +124,7 @@ class DATA:
         return DATA.clone(self, best), DATA.clone(self, rest), evals
 
     def kmeans(self, rows=None):
+
         left = []
         right = []
         A = None
@@ -132,25 +133,27 @@ class DATA:
         def min_dist(center, row, A):
             if not A:
                 A = row
-            if self.dist(A, center) > self.dist(A, row):
+            ACenterDist = self.dist(A, center)
+            ARowDist = self.dist(A, row)
+            if ACenterDist > ARowDist:
                 return row
             else:
                 return A
 
         if not rows:
             rows = self.rows
-        row_set = np.array([r.cells for r in rows])
+        row_set = np.array([each_row.cells for each_row in rows])
         kmeans = KMeans(n_clusters=2, random_state=Seed, n_init=10)
         kmeans.fit(row_set)
-        left_cluster = Row(kmeans.cluster_centers_[0])
-        right_cluster = Row(kmeans.cluster_centers_[1])
+        leftside_cluster = Row(kmeans.cluster_centers_[0])
+        rightside_cluster = Row(kmeans.cluster_centers_[1])
 
-        for key, value in enumerate(kmeans.labels_):
-            if value == 0:
-                A = min_dist(left_cluster, rows[key], A)
+        for key, key_value in enumerate(kmeans.labels_):
+            if key_value == 0:
+                A = min_dist(leftside_cluster, rows[key], A)
                 left.append(rows[key])
             else:
-                B = min_dist(right_cluster, rows[key], B)
+                B = min_dist(rightside_cluster, rows[key], B)
                 right.append(rows[key])
 
         return left, right, A, B, 1
@@ -163,7 +166,7 @@ class DATA:
         else:
             return tmp[1:n], tmp[n + 1:]
 
-    def boolean_dom(self, rows1, rows2, ys=None):
+    def boolean_domination(self, rows1, rows2, ys=None):
         if isinstance(rows1, Row):
             rows1 = [rows1]
             rows2 = [rows2]
@@ -181,9 +184,9 @@ class DATA:
                     dominates = True
         return dominates
 
-    def decision_boolean_dom(self, row1, row2, ys=None):
-        row1_boolean_dom = self.boolean_dom(row1, row2, ys=ys)
-        row2_boolean_dom = self.boolean_dom(row2, row1, ys=ys)
+    def perform_boolean_domination(self, row1, row2, ys=None):
+        row1_boolean_dom = self.boolean_domination(row1, row2, ys=ys)
+        row2_boolean_dom = self.boolean_domination(row2, row1, ys=ys)
         if row1_boolean_dom and not row2_boolean_dom:
             return True
         else:
